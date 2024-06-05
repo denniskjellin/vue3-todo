@@ -9,8 +9,8 @@
     </div>
 
     <div class="todo-container">
-      <h2>My tasks</h2>
-      <ul>
+      <h2 v-if="todos.length > 0">My tasks</h2>
+      <ul v-if="todos.length > 0">
         <li v-for="todo in todos" :key="todo.id">
           {{ todo.text }}
           <button class="delete-button" @click="deleteTodo(todo.id)">Delete</button>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 export default {
   name: 'AddTodo',
@@ -30,18 +30,31 @@ export default {
     const newTodo = ref('')
     const todos = ref([
       { id: id++, text: 'Learn Vue.js' },
-      { id: id++, text: 'Build a todo app' },
-      { id: id++, text: 'Practice JavaScript' }
     ])
+
+    onMounted(() => {
+      const savedTodos = JSON.parse(localStorage.getItem('todos'))
+      if (savedTodos) {
+        todos.value = savedTodos
+      }
+    })
 
     function addTodo() {
       todos.value.push({ id: id++, text: newTodo.value })
       newTodo.value = ''
+      saveTodos()
     }
 
     function deleteTodo(todoId) {
       todos.value = todos.value.filter(todo => todo.id !== todoId)
+      saveTodos()
     }
+
+    function saveTodos() {
+      localStorage.setItem('todos', JSON.stringify(todos.value))
+    }
+
+
 
     return {
       newTodo,
