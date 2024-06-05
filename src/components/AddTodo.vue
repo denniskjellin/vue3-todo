@@ -24,7 +24,6 @@
 import { ref, onMounted } from 'vue'
 
 export default {
-  name: 'AddTodo',
   setup() {
     let id = 0
     const newTodo = ref('')
@@ -53,8 +52,6 @@ export default {
     function saveTodos() {
       localStorage.setItem('todos', JSON.stringify(todos.value))
     }
-
-
 
     return {
       newTodo,
