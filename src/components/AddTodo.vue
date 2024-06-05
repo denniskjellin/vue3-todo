@@ -11,8 +11,11 @@
     <div class="todo-container">
       <h2 v-if="todos.length > 0">My tasks</h2>
       <ul v-if="todos.length > 0">
-        <li v-for="todo in todos" :key="todo.id">
-          {{ todo.text }}
+        <li v-for="todo in todos" :key="todo.id" :class="{ 'done': todo.completed }">
+          <div class="task-item">
+            <input class="checkmark" type="checkbox" v-model="todo.completed" @change="toggleTaskCompletion(todo)">
+            <span>{{ todo.text }}</span>
+          </div>
           <button class="delete-button" @click="deleteTodo(todo.id)">Delete</button>
         </li>
       </ul>
@@ -26,38 +29,58 @@ import { ref, onMounted } from 'vue'
 export default {
   setup() {
     let id = 0
-    const newTodo = ref('')
-    const todos = ref([
-      { id: id++, text: 'Learn Vue.js' },
+    const newTodo = ref('') // Represents the input value for a new todo item
+    const todos = ref([ // Represents the list of todo items
+      {},
     ])
 
     onMounted(() => {
       const savedTodos = JSON.parse(localStorage.getItem('todos'))
       if (savedTodos) {
-        todos.value = savedTodos
+        todos.value = savedTodos // Restores the saved todos from local storage
       }
     })
 
+    /**
+     * Adds a new todo item to the list of todos
+     */
     function addTodo() {
-      todos.value.push({ id: id++, text: newTodo.value })
-      newTodo.value = ''
-      saveTodos()
+      todos.value.push({ id: id++, text: newTodo.value, completed: false }) // Pushes a new todo object to the todos array
+      newTodo.value = '' // Resets the input value for a new todo item
+      saveTodos() // Saves the updated todos to local storage
     }
 
+    /**
+     * Deletes a todo item from the list of todos
+     * @param {number} todoId - The ID of the todo item to be deleted
+     */
     function deleteTodo(todoId) {
-      todos.value = todos.value.filter(todo => todo.id !== todoId)
-      saveTodos()
+      todos.value = todos.value.filter(todo => todo.id !== todoId) // Filters out the todo item with the specified ID
+      saveTodos() // Saves the updated todos to local storage
     }
 
+    /**
+     * Toggles the completion status of a todo item
+     * @param {object} todo - The todo item to toggle completion status for
+     */
+    function toggleTaskCompletion(todo) {
+      // TODO: Implement toggleTaskCompletion logic
+      saveTodos() // Saves the updated todos to local storage
+    }
+
+    /**
+     * Saves the todos to local storage
+     */
     function saveTodos() {
-      localStorage.setItem('todos', JSON.stringify(todos.value))
+      localStorage.setItem('todos', JSON.stringify(todos.value)) // Converts the todos array to JSON and saves it to local storage
     }
 
     return {
       newTodo,
       addTodo,
       todos,
-      deleteTodo
+      deleteTodo,
+      toggleTaskCompletion
     }
   }
 }
@@ -65,9 +88,7 @@ export default {
 
 <style>
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 0 1rem;
 }
 
 form {
@@ -98,38 +119,56 @@ label {
   padding: 1rem 2rem;
   border-radius: 25px;
   border: none;
-  margin: 1.5rem;
-    font-weight: bold;
-    transition: ease-in-out 0.2s;
-  }
-  
-  .add-button:hover {
-    background-color: rgb(78, 165, 132);
-  }
-  
-  .todo-container {
-    margin-top: 3rem;
-    width: 500px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    background-color: rgba(95, 95, 95, 0.303);
-    margin-bottom: 0.5rem;
-    padding: 1rem;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  li:hover {
-    background-color: rgba(82, 81, 81, 0.303);
-  }
+  margin: 1.5rem 0;
+  font-weight: bold;
+  transition: ease-in-out 0.2s;
+}
+
+.add-button:hover {
+  background-color: rgb(78, 165, 132);
+}
+
+.todo-container {
+  margin-top: 3rem;
+  width: 100%;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(95, 95, 95, 0.303);
+  margin-bottom: 0.5rem;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.done {
+  color: rgb(149, 149, 149);
+}
+
+.done span {
+  text-decoration: line-through;
+}
+
+span {
+  margin-left: 1rem;
+}
+
+li:hover {
+  background-color: rgba(82, 81, 81, 0.303);
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+}
+
 .delete-button {
   background-color: #800c17;
   color: white;
@@ -143,5 +182,17 @@ label {
 
 .delete-button:hover {
   background-color: #660a13;
+}
+
+.checkmark {
+  height: 1.2rem;
+  width: 1.2rem;
+  background-color: #eee;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 600px;
+  }
 }
 </style>

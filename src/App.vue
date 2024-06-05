@@ -31,6 +31,10 @@ body {
   box-sizing: border-box;
   background: linear-gradient(to right, #37443f, #00495d);
   height: 100vh;
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 nav {

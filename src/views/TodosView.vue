@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Task manager</h1>
     <AddTodo />
   </div>
 </template>
