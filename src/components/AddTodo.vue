@@ -20,6 +20,7 @@
         </li>
       </ul>
     </div>
+    <div v-if="message" class="message">{{ message }}</div>
   </div>
 </template>
 
@@ -30,49 +31,50 @@ export default {
   setup() {
     let id = 0
     const newTodo = ref('') // Represents the input value for a new todo item
-    const todos = ref([ // Represents the list of todo items
-      {},
-    ])
+    const todos = ref([]) // Represents the list of todo items
+    const message = ref('') // Represents the message to be displayed
 
     onMounted(() => {
       const savedTodos = JSON.parse(localStorage.getItem('todos'))
       if (savedTodos) {
-        todos.value = savedTodos // Restores the saved todos from local storage
+        todos.value = savedTodos
       }
     })
 
-    /**
-     * Adds a new todo item to the list of todos
-     */
+
+    // Adds a new todo item to the list of todos
     function addTodo() {
-      todos.value.push({ id: id++, text: newTodo.value, completed: false }) // Pushes a new todo object to the todos array
-      newTodo.value = '' // Resets the input value for a new todo item
-      saveTodos() // Saves the updated todos to local storage
+      todos.value.push({ id: id++, text: newTodo.value, completed: false })
+      newTodo.value = ''
+      saveTodos()
+      showMessage('Task added')
     }
 
-    /**
-     * Deletes a todo item from the list of todos
-     * @param {number} todoId - The ID of the todo item to be deleted
-     */
+
+    // Deletes a todo item from the list of todos
     function deleteTodo(todoId) {
-      todos.value = todos.value.filter(todo => todo.id !== todoId) // Filters out the todo item with the specified ID
-      saveTodos() // Saves the updated todos to local storage
+      todos.value = todos.value.filter(todo => todo.id !== todoId)
+      saveTodos()
+      showMessage('Task deleted')
     }
 
-    /**
-     * Toggles the completion status of a todo item
-     * @param {object} todo - The todo item to toggle completion status for
-     */
+    // Toggles the completion status of a todo item
     function toggleTaskCompletion(todo) {
-      // TODO: Implement toggleTaskCompletion logic
-      saveTodos() // Saves the updated todos to local storage
+      saveTodos()
     }
 
-    /**
-     * Saves the todos to local storage
-     */
+
+    // Saves the todos to local storage
     function saveTodos() {
-      localStorage.setItem('todos', JSON.stringify(todos.value)) // Converts the todos array to JSON and saves it to local storage
+      localStorage.setItem('todos', JSON.stringify(todos.value))
+    }
+
+
+    function showMessage(text) {
+      message.value = text
+      setTimeout(() => {
+        message.value = ''
+      }, 3000)
     }
 
     return {
@@ -80,7 +82,8 @@ export default {
       addTodo,
       todos,
       deleteTodo,
-      toggleTaskCompletion
+      toggleTaskCompletion,
+      message
     }
   }
 }
@@ -190,9 +193,15 @@ li:hover {
   background-color: #eee;
 }
 
-@media screen and (min-width: 768px) {
-  .container {
-    max-width: 600px;
-  }
+.message {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 999;
 }
 </style>
