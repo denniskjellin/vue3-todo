@@ -74,46 +74,54 @@ input {
   border: none;
   border-radius: 4px;
   box-sizing: border-box;
+  background-color: rgb(207, 212, 216)
 }
 
 label {
   font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .add-button {
-  background-color: rgb(6, 119, 76);
+  background-color: rgb(27, 119, 84);
   color: white;
   padding: 1rem 2rem;
   border-radius: 25px;
   border: none;
-  margin: 1.5rem
-}
-
-.add-button:hover {
-  background-color: rgb(7, 111, 71);
-}
-
-.todo-container {
-  width: 500px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  background-color: rgba(95, 95, 95, 0.303);
-  margin-bottom: 0.5rem;
-  padding: 1rem;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
+  margin: 1.5rem;
+    font-weight: bold;
+    transition: ease-in-out 0.2s;
+  }
+  
+  .add-button:hover {
+    background-color: rgb(78, 165, 132);
+  }
+  
+  .todo-container {
+    margin-top: 3rem;
+    width: 500px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    background-color: rgba(95, 95, 95, 0.303);
+    margin-bottom: 0.5rem;
+    padding: 1rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  li:hover {
+    background-color: rgba(82, 81, 81, 0.303);
+  }
 .delete-button {
-  background-color: #dc3545;
+  background-color: #800c17;
   color: white;
   border: none;
   border-radius: 5px;
@@ -124,6 +132,6 @@ li {
 }
 
 .delete-button:hover {
-  background-color: #c82333;
+  background-color: #660a13;
 }
 </style>
