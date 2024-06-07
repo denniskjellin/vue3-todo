@@ -3,22 +3,27 @@
     <div class="form">
       <form @submit.prevent="addTodo">
         <label for="addTodo">Create a task</label>
-        <input name="addTodo" id="addTodo" v-model="newTodo" required placeholder="Whats on your mind?" />
+        <input name="addTodo" id="addTodo" v-model="newTodo" required placeholder="What's on your mind?" />
         <button class="add-button">Add Task</button>
       </form>
     </div>
 
     <div class="todo-container">
       <h2 v-if="todos.length > 0">My tasks</h2>
-      <ul v-if="todos.length > 0">
-        <li v-for="todo in todos" :key="todo.id" :class="{ 'done': todo.completed }">
-          <div class="task-item">
-            <input class="checkmark" type="checkbox" v-model="todo.completed" @change="toggleTaskCompletion(todo)">
+      <div v-if="todos.length > 0">
+        <div v-for="todo in todos" :key="todo.id" :class="{ 'done': todo.completed }" class="todo-item">
+          <div class="todo-content">
+            <input class="checkmark" type="checkbox" v-model="todo.completed" @change="toggleTodoCompletion(todo)">
             <span>{{ todo.text }}</span>
+            <div class="button-container">
+              <button class="delete-button" @click="deleteTodo(todo.id)">Delete</button>
+            </div>
           </div>
-          <button class="delete-button" @click="deleteTodo(todo.id)">Delete</button>
-        </li>
-      </ul>
+          <div class="date-container">
+            <span class="date">Created at: {{ todo.createdAt }}</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-if="message" class="message">{{ message }}</div>
   </div>
@@ -44,11 +49,21 @@ export default {
 
     // Adds a new todo item to the list of todos
     function addTodo() {
-      todos.value.push({ id: id++, text: newTodo.value, completed: false })
-      newTodo.value = ''
-      saveTodos()
-      showMessage('Task added')
+      // Date options for the locale
+      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      const locale = 'sv-SE';
+
+      todos.value.push({
+        id: id++,
+        text: newTodo.value,
+        completed: false,
+        createdAt: new Date().toLocaleString(locale, dateOptions)
+      });
+      newTodo.value = '';
+      saveTodos();
+      showMessage('Task added');
     }
+
 
 
     // Deletes a todo item from the list of todos
@@ -108,7 +123,7 @@ input {
   border: none;
   border-radius: 4px;
   box-sizing: border-box;
-  background-color: rgb(207, 212, 216)
+  background-color: rgb(207, 212, 216);
 }
 
 label {
@@ -136,15 +151,7 @@ label {
   width: 100%;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.todo-item {
   background-color: rgba(95, 95, 95, 0.303);
   margin-bottom: 0.5rem;
   padding: 1rem;
@@ -159,17 +166,27 @@ li {
   text-decoration: line-through;
 }
 
-span {
+.todo-content {
+  display: flex;
+  align-items: center;
+}
+
+.todo-content span {
   margin-left: 1rem;
 }
 
-li:hover {
-  background-color: rgba(82, 81, 81, 0.303);
+.date-container {
+  text-align: right;
+  margin-top: 0.5rem;
 }
 
-.task-item {
-  display: flex;
-  align-items: center;
+.date {
+  font-size: 0.9rem;
+  color: #c0c0c0;
+}
+
+.button-container {
+  margin-left: auto;
 }
 
 .delete-button {
@@ -180,7 +197,6 @@ li:hover {
   cursor: pointer;
   transition: background-color 0.3s ease;
   padding: 0.5rem 1rem;
-  font-size: 1rem;
 }
 
 .delete-button:hover {
