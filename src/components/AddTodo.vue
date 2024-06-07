@@ -74,7 +74,7 @@ export default {
     }
 
     // Toggles the completion status of a todo item
-    function toggleTaskCompletion(todo) {
+    function toggleTodoCompletion(todo) {
       saveTodos()
     }
 
@@ -97,7 +97,7 @@ export default {
       addTodo,
       todos,
       deleteTodo,
-      toggleTaskCompletion,
+      toggleTodoCompletion,
       message
     }
   }
